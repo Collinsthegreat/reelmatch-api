@@ -1,0 +1,51 @@
+# Core Django + REST framework
+Django==4.2.7
+djangorestframework==3.14.0
+django-cors-headers==4.3.1
+
+# Database (Postgres + Redis caching)
+psycopg2-binary==2.9.7
+redis==5.0.1
+django-redis==5.4.0
+
+# REST API
+djangorestframework-simplejwt
+
+# Security, auth & config
+PyJWT==2.8.0
+cryptography==41.0.7
+python-decouple==3.8
+django-ratelimit==4.1.0
+
+# Task queues / async
+celery==5.3.4
+django-celery-beat==2.5.0
+
+# Caching
+django-redis
+
+# API Docs
+drf-spectacular==0.27.0
+
+# Utils & developer tools
+requests==2.31.0
+Pillow==10.1.0
+django-extensions==3.2.3
+ipython==8.17.2
+
+python-dotenv==1.1.1
+gunicorn==20.1.0
+
+tabulate
+
+pytest
+pytest-django
+pytest-mock
+factory_boy
+coverage    
+
+python-json-logger>=2.0.7
+
+             # optional
+# (keep your runtime requirements too: Django, djangorestframework, drf-spectacular, djangorestframework-simplejwt, etc.)
+

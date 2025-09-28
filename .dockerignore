@@ -1,0 +1,66 @@
+# ------------------------
+# Python / Django Specific
+# ------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+.eggs/
+db.sqlite3
+
+# ------------------------
+# Virtual Environments
+# ------------------------
+venv/
+env/
+.venv/
+ENV/
+
+# ------------------------
+# Logs & Runtime Files
+# ------------------------
+*.log
+*.pot
+*.mo
+*.pid
+*.seed
+*.coverage
+.coverage.*
+.cache/
+*.py,cover
+
+# ------------------------
+# Django & Celery Specific
+# ------------------------
+*.sqlite3
+media/
+staticfiles/
+celerybeat-schedule
+celerybeat.pid
+
+# ------------------------
+# OS / Editor Junk
+# ------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ------------------------
+# Git / CI/CD
+# ------------------------
+.git/
+.gitignore
+.gitattributes
+
+# ------------------------
+# Docker / Compose
+# ------------------------
+.dockerignore
+docker-compose*.yml
+Dockerfile*
