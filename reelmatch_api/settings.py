@@ -3,6 +3,7 @@ Django settings for reelmatch_api project.
 """
 
 import os
+import dj_database_url 
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
@@ -76,7 +77,8 @@ WSGI_APPLICATION = "reelmatch_api.wsgi.application"
 
 # -------------------------------------------------------------------
 # Database
-# -------------------------------------------------------------------
+# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -87,9 +89,11 @@ DATABASES = {
         "PORT": os.getenv("POSTGRES_PORT", "5432"),
     }
 }
-# Persistent connections for efficiency
-DATABASES["default"]["CONN_MAX_AGE"] = int(os.getenv("CONN_MAX_AGE", 60))
 
+# ✅ Override with DATABASE_URL if it exists (for Render/production)
+DATABASE_URL = os.getenv("DATABASE_URL")
+if DATABASE_URL:
+    DATABASES["default"] = dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
 # -------------------------------------------------------------------
 # Caching
 # -------------------------------------------------------------------

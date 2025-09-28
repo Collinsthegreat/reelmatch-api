@@ -31,3 +31,8 @@ build/
 # Mac / Windows
 .DS_Store
 Thumbs.db
+
+# Render-specific
+render.yaml
+.env            # environment variables (set them in Render dashboard instead)
+*.log           # log files

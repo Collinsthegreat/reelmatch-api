@@ -49,3 +49,4 @@ python-json-logger>=2.0.7
              # optional
 # (keep your runtime requirements too: Django, djangorestframework, drf-spectacular, djangorestframework-simplejwt, etc.)
 
+dj-database-url
