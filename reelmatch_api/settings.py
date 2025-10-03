@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_spectacular",
     "rest_framework_simplejwt",
-    "django_redis",
+    # "django_redis",   # ❌ removed (no Redis on Render)
     "django_celery_beat",  # for scheduled tasks
 
     # Local apps
@@ -83,20 +83,12 @@ DATABASES = {
 }
 
 # -------------------------------------------------------------------
-# Caching (Redis)
+# Caching (LocMemCache instead of Redis)
 # -------------------------------------------------------------------
-REDIS_HOST = os.getenv("REDIS_HOST", "redis")
-REDIS_PORT = os.getenv("REDIS_PORT", "6379")
-
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "CONNECTION_POOL_KWARGS": {"max_connections": 100, "retry_on_timeout": True},
-        },
-        "TIMEOUT": 60 * 15,  # cache entries expire after 15 min
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-reelmatch-cache",
     }
 }
 
@@ -134,7 +126,9 @@ SIMPLE_JWT = {
 # -------------------------------------------------------------------
 # Celery
 # -------------------------------------------------------------------
-CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://redis:6379/0")
+# Since Redis is unavailable on Render, Celery will not work unless you connect
+# to a managed Redis (like Upstash). For now, disable Redis config.
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "memory://")
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
