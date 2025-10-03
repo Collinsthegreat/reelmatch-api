@@ -31,6 +31,17 @@ services:
 
   web:
     build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      # 🔑 Render Postgres connection
+      DATABASE_URL: postgresql://reelmatch_user:78nAcCTFbvL3nGAIvJgQxS2EyYrKE56Q@dpg-d3fgevbipnbc73djg4ag-a.oregon-postgres.render.com/reelmatch_db
+      DJANGO_SECRET_KEY: super-secret-key
+      DJANGO_DEBUG: "True"
+      DJANGO_ALLOWED_HOSTS: "*"
     depends_on:
       postgres:
         condition: service_healthy
@@ -45,6 +56,11 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://reelmatch_user:78nAcCTFbvL3nGAIvJgQxS2EyYrKE56Q@dpg-d3fgevbipnbc73djg4ag-a.oregon-postgres.render.com/reelmatch_db
+      DJANGO_SECRET_KEY: super-secret-key
+      DJANGO_DEBUG: "True"
+      DJANGO_ALLOWED_HOSTS: "*"
 
   beat:
     build: .
@@ -54,6 +70,11 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://reelmatch_user:78nAcCTFbvL3nGAIvJgQxS2EyYrKE56Q@dpg-d3fgevbipnbc73djg4ag-a.oregon-postgres.render.com/reelmatch_db
+      DJANGO_SECRET_KEY: super-secret-key
+      DJANGO_DEBUG: "True"
+      DJANGO_ALLOWED_HOSTS: "*"
 
 volumes:
   postgres_data:

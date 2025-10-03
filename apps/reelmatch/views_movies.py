@@ -1,6 +1,8 @@
 # apps/reelmatch/views_movies.py
-from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import permissions, status
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes
 
 # Mocked movie data for testing
 MOCK_TRENDING = [
@@ -22,18 +24,59 @@ MOCK_DETAILS = {
 }
 
 
-@api_view(["GET"])
-def trending_movies(request):
-    return Response({"results": MOCK_TRENDING})
+class TrendingMoviesAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    @extend_schema(
+        responses={200: OpenApiTypes.OBJECT},
+        description="Return a mocked list of trending movies."
+    )
+    def get(self, request):
+        return Response({"results": MOCK_TRENDING})
 
 
-@api_view(["GET"])
-def recommendations_movies(request, movie_id: int):
-    data = MOCK_RECOMMENDATIONS.get(movie_id, [])
-    return Response({"results": data})
+@extend_schema(
+    parameters=[
+        OpenApiParameter(
+            name="movie_id",
+            type=OpenApiTypes.INT,
+            location=OpenApiParameter.PATH,
+            description="Movie ID for fetching recommendations",
+            required=True,
+        ),
+    ],
+    responses={200: OpenApiTypes.OBJECT},
+    description="Return mocked recommendations for a given movie ID."
+)
+class MovieRecommendationsAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, movie_id: int):
+        data = MOCK_RECOMMENDATIONS.get(movie_id, [])
+        return Response({"results": data})
 
 
-@api_view(["GET"])
-def movie_details(request, movie_id: int):
-    data = MOCK_DETAILS.get(movie_id, {})
-    return Response(data)
+@extend_schema(
+    parameters=[
+        OpenApiParameter(
+            name="movie_id",
+            type=OpenApiTypes.INT,
+            location=OpenApiParameter.PATH,
+            description="Movie ID for fetching details",
+            required=True,
+        ),
+    ],
+    responses={200: OpenApiTypes.OBJECT, 404: OpenApiTypes.OBJECT},
+    description="Return mocked movie details by ID."
+)
+class MovieDetailsAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, movie_id: int):
+        data = MOCK_DETAILS.get(movie_id)
+        if not data:
+            return Response(
+                {"detail": "Movie not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        return Response(data)

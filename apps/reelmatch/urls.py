@@ -1,25 +1,8 @@
 # reelmatch/urls.py
 #
-# URL routing for the reelmatch app.
-#
-# This file defines endpoints for:
-# 1. Trending movies (via TMDb)
-# 2. Movie recommendations (via TMDb)
-# 3. Movie search (via TMDb)
-# 4. User favorite movies (CRUD via DRF ViewSet)
-#
-# DRF router automatically generates RESTful routes for the FavoriteMovieViewSet.
-# Example:
-#   - GET    /api/favorites/        → list all favorites
-#   - POST   /api/favorites/        → add a favorite
-#   - GET    /api/favorites/{id}/   → retrieve a specific favorite
-#   - PUT    /api/favorites/{id}/   → update a favorite
-#   - DELETE /api/favorites/{id}/   → delete a favorite
-#
-# Additional endpoints:
-#   - GET /movies/trending/?page=1
-#   - GET /movies/{movie_id}/recommendations/?page=1
-#   - GET /movies/search/?query=<title>&page=1
+# Main API routes for Reelmatch.
+# - TMDb-backed endpoints (production-ready)
+# - User favorite movies (CRUD)
 #
 
 from django.urls import path, include
@@ -35,13 +18,12 @@ from .views import (
 router = DefaultRouter()
 router.register(r"favorites", FavoriteMovieViewSet, basename="favorite")
 
-# Define URL patterns
 urlpatterns = [
-    # TMDb endpoints
+    # TMDb endpoints (real API)
     path(
         "movies/trending/",
         TrendingMoviesAPIView.as_view(),
-        name="movies-trending"
+        name="movies-trending",
     ),
     path(
         "movies/<int:movie_id>/recommendations/",
@@ -56,5 +38,4 @@ urlpatterns = [
 
     # Favorites endpoints (provided by DRF router)
     path("api/", include(router.urls)),
-
 ]

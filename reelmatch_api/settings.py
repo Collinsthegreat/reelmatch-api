@@ -1,9 +1,7 @@
-"""
-Django settings for reelmatch_api project.
-"""
+""" Django settings for reelmatch_api project. """
 
 import os
-import dj_database_url 
+import dj_database_url
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
@@ -33,18 +31,16 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "rest_framework_simplejwt",
     "django_redis",
-    "django_celery_beat",   # for scheduled tasks
+    "django_celery_beat",  # for scheduled tasks
 
     # Local apps
     "apps.reelmatch",
     "apps.users",
     "apps.common",
 ]
+
 # Custom user model
 AUTH_USER_MODEL = "users.User"
-
-
-
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -76,32 +72,23 @@ TEMPLATES = [
 WSGI_APPLICATION = "reelmatch_api.wsgi.application"
 
 # -------------------------------------------------------------------
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
+# Database (Render PostgreSQL)
+# -------------------------------------------------------------------
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB", "reelmatch"),
-        "USER": os.getenv("POSTGRES_USER", "reelmatch"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "reelmatchpass"),
-        "HOST": os.getenv("POSTGRES_HOST", "localhost"),
-        "PORT": os.getenv("POSTGRES_PORT", "5432"),
-    }
+    "default": dj_database_url.config(
+        default=os.getenv("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=True,
+    )
 }
 
-# ✅ Override with DATABASE_URL if it exists (for Render/production)
-DATABASE_URL = os.getenv("DATABASE_URL")
-if DATABASE_URL:
-    DATABASES["default"] = dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
 # -------------------------------------------------------------------
-# Caching
+# Caching (Redis)
 # -------------------------------------------------------------------
-
 REDIS_HOST = os.getenv("REDIS_HOST", "redis")
 REDIS_PORT = os.getenv("REDIS_PORT", "6379")
 
-CACHES = CACHES = {
+CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/1",
@@ -178,7 +165,6 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
-
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
